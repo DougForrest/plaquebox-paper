@@ -6,7 +6,7 @@ urls = ["https://zenodo.org/record/1470797/files/Dataset%201a%20Development_trai
 
 
 # outfile=
-f = open("downloadfiles.txt", "w")
+f = open(os.path.join("scripts", "downloadfiles.txt", "w")
 f.write("TsvHttpData-1.0")
 for url in urls:
     response = requests.head(url)
