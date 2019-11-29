@@ -1,0 +1,27 @@
+# general things to ignore
+archive
+build
+chart
+dist
+workingdir
+venv
+*.DS_Store
+*.sqlite3
+*.egg-info
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+*.Rhistory
+*.json
+# due to using tox and pytest
+.tox
+.cache
+*.log
+logfile
+venv/
+coverage_html_report/
+rpm/media/uploads/
+.ipynb_checkpoints
+data
