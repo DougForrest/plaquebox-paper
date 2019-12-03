@@ -7,7 +7,7 @@ sudo apt-get install -y libvips
 pip install pyvips
 
 cd ~
-git clone https://github.com/DougForrest/plaquebox-paper.git
+git clone https://github.com/DougForrest/plaquebox-paper.git ~/home/jupyter/plaquebox-paper/
 
 export MOUNT_DIR=disk-1
 export DEVICE_ID=sdb

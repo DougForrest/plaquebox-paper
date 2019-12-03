@@ -123,8 +123,12 @@ gcloud compute ssh --zone=$ZONE --project=$PROJECT_ID $INSTANCE_NAME
 # SSH into the machine and run
 export MOUNT_DIR=disk-1
 sudo umount /dev/disk/by-id/google-$MOUNT_DIR
+
+#Stop instance
+gcloud compute instances stop $INSTANCE_NAME
+
 #Detach disk
 gcloud compute instances detach-disk $INSTANCE_NAME --disk=$MOUNT_DIR --zone=$ZONE --project=$PROJECT_ID
 
-gcloud compute instances stop $INSTANCE_NAME
+
 ```
