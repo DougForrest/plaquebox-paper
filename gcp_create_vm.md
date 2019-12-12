@@ -77,10 +77,11 @@ gcloud compute instances create $INSTANCE_NAME \
 # NN training machine
 export PROJECT_ID="plaquebox-paper"
 export SERVICE_ACCT_NAME="storage"
-export INSTANCE_NAME="plaquebox-paper-nn-4"
-# export INSTANCE_TYPE="n1-highmem-8"
-export INSTANCE_TYPE="n1-standard-2"
+export INSTANCE_NAME="plaquebox-paper-nn-fastai"
+export INSTANCE_TYPE="n1-highmem-8"
+# export INSTANCE_TYPE="n1-standard-2"
 export IMAGE_FAMILY="pytorch-latest-gpu"
+# export IMAGE_FAMILY='pytorch-0-4-cu92'
 export ZONE="us-west1-b"
 # Launch existing disk
 gcloud compute instances create $INSTANCE_NAME \
@@ -91,14 +92,16 @@ gcloud compute instances create $INSTANCE_NAME \
         --maintenance-policy=TERMINATE \
         --machine-type=$INSTANCE_TYPE \
         --boot-disk-size=300GB \
-        --service-account=$SERVICE_ACCT_NAME@$PROJECT_ID.iam.gserviceaccount.com \
-	    --scopes=https://www.googleapis.com/auth/cloud-platform \
 		--disk=name=disk-1,device-name=disk-1,mode=rw,boot=no \
-		--metadata-from-file startup-script=./scripts/startup.sh
-
+        --metadata="install-nvidia-driver=True" \
+        --metadata-from-file startup-script=./scripts/startup.sh \
         --accelerator="type=nvidia-tesla-t4,count=1" \
+        # --preemptible
 
 
+
+        --service-account=$SERVICE_ACCT_NAME@$PROJECT_ID.iam.gserviceaccount.com \
+        --scopes=https://www.googleapis.com/auth/cloud-platform \
 ```
 
 # Connect to serial port (Optional)
@@ -116,6 +119,11 @@ gcloud compute ssh --zone=$ZONE --project=$PROJECT_ID jupyter@$INSTANCE_NAME -- 
 gcloud compute ssh --zone=$ZONE --project=$PROJECT_ID $INSTANCE_NAME
 ```
 
+```bash
+# Fix folder permissions (TODO(ME) why are permissions broken?)
+sudo chmod -R ugo+rw ~
+sudo chmod -R ugo+rw /mnt/disks/disk-1/
+
 
 # Stop Instance
 ```bash
@@ -128,7 +136,9 @@ sudo umount /dev/disk/by-id/google-$MOUNT_DIR
 gcloud compute instances stop $INSTANCE_NAME
 
 #Detach disk
+export MOUNT_DIR=disk-1
 gcloud compute instances detach-disk $INSTANCE_NAME --disk=$MOUNT_DIR --zone=$ZONE --project=$PROJECT_ID
 
-
+#Delete instance
+gcloud compute instances delete $INSTANCE_NAME
 ```
