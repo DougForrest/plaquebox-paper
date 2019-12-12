@@ -1,0 +1,16 @@
+ipython==7.9.0
+jupyterlab==1.0
+ipywidgets>=7.5
+matplotlib==2.2.2
+numpy==1.14.3
+pandas==0.23.0
+scikit-learn==0.19.1
+scikit-image=0.13.1
+scipy==1.1.0
+plotly==4.1.0
+ipykernel==5.1.2
+torch==0.3.0
+torchvision==0.2.1
+pyvips==2.1.2
+tqdm==4.23.4
+google-cloud-storage==1.20.0
