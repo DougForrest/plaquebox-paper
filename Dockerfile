@@ -1,9 +1,9 @@
 FROM python:3.6
 RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
 	python-opencv \
 	libvips
-ADD ./requirements /code
+ADD . /code
 WORKDIR /code
 RUN pip install -r requirements/reproducing.txt
-CMD ['python test_docker_build.py']
+CMD jupyter lab --ip 0.0.0.0 --no-browser --allow-root
