@@ -14,3 +14,5 @@ img_path = os.path.join(data_dir,
 
 img_path_test = os.path.join(data_dir,
                         'tiles', 'tiles')
+
+image_classes = ['cored', 'diffuse', 'CAA']
