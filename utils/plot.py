@@ -1,4 +1,6 @@
 from sklearn.metrics import roc_curve, auc, precision_recall_curve
+from matplotlib import pyplot as plt
+
 
 def roc(preds, label, image_classes, size=20, path=None, dataset=None, model_name=None):
     colors = ['pink','c','deeppink', 'b', 'g', 'm', 'y', 'r', 'k']
@@ -9,8 +11,6 @@ def roc(preds, label, image_classes, size=20, path=None, dataset=None, model_nam
         class_name = image_classes[i]
         output[class_name] = {}
         fpr, tpr, _ = roc_curve(label[:,i].ravel(), preds[:,i].ravel())
-        output[class_name]['fpr'] = fpr
-        output[class_name]['tpr'] = tpr
         output[class_name]['roc_auc'] = auc(fpr, tpr)
 
         lw = 0.2*size
@@ -26,7 +26,7 @@ def roc(preds, label, image_classes, size=20, path=None, dataset=None, model_nam
     ax.set_ylim([0.0, 1.05])
     ax.set_xlabel('False Positive Rate', fontsize=1.8*size)
     ax.set_ylabel('True Positive Rate', fontsize=1.8*size)
-    ax.set_title('Receiver operating characteristic Curve\nfor {model_name} on {dataset} data', fontsize=1.8*size, y=1.01)
+    ax.set_title(f'Receiver operating characteristic Curve\nfor {model_name} on {dataset} data', fontsize=1.8*size, y=1.01)
     ax.legend(loc=0, fontsize=1.5*size)
     ax.xaxis.set_tick_params(labelsize=1.6*size, size=size/2, width=0.2*size)
     ax.yaxis.set_tick_params(labelsize=1.6*size, size=size/2, width=0.2*size)
@@ -47,13 +47,13 @@ def prc(preds, label, image_classes, size=20, path=None, dataset=None, model_nam
     for i in range(preds.shape[1]):
         rp = (label[:,i]>0).sum()/len(label)
         precision, recall, _ = precision_recall_curve(label[:,i].ravel(), preds[:,i].ravel())
-        output[class_name]['precision'] = precision
-        output[class_name]['recall'] = recall
+        class_name = image_classes[i]
+        output[class_name] = {}
         output[class_name]['pr_auc'] = auc(recall, precision)
         lw=0.2*size
     
         ax.plot(recall, precision,
-                 label='PR-curve of {}'.format(image_classes[i])+ '( area = {0:0.3f})'
+                 label='PR-curve of {}'.format(class_name)+ '( area = {0:0.3f})'
                 ''.format(output[class_name]['pr_auc']),
                  color=colors[(i+preds.shape[1])%len(colors)], linewidth=lw)
 
