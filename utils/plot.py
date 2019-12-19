@@ -9,16 +9,16 @@ def roc(preds, label, image_classes, size=20, path=None, dataset=None, model_nam
     output = {}
     for i in range(preds.shape[1]):
         class_name = image_classes[i]
-        output[class_name] = {}
+#         output[class_name] = {}
         fpr, tpr, _ = roc_curve(label[:,i].ravel(), preds[:,i].ravel())
-        output[class_name]['roc_auc'] = auc(fpr, tpr)
+        output[f"AUROC_#{class_name}"] = auc(fpr, tpr)
 
         lw = 0.2*size
         # Plot all ROC curves
         ax.plot([0, 1], [0, 1], 'k--', lw=lw, label='random')
         ax.plot(fpr, tpr,
                  label='ROC-curve of {}'.format(class_name)+ '( area = {0:0.3f})'
-                ''.format(output[class_name]['roc_auc']),
+                ''.format(output[f"AUROC_#{class_name}"]),
                   color=colors[(i+preds.shape[1])%len(colors)], linewidth=lw)
        
     
@@ -48,13 +48,13 @@ def prc(preds, label, image_classes, size=20, path=None, dataset=None, model_nam
         rp = (label[:,i]>0).sum()/len(label)
         precision, recall, _ = precision_recall_curve(label[:,i].ravel(), preds[:,i].ravel())
         class_name = image_classes[i]
-        output[class_name] = {}
-        output[class_name]['pr_auc'] = auc(recall, precision)
+#         output[class_name] = {}
+        output[f"AUPRC_#{class_name}"] = auc(recall, precision)
         lw=0.2*size
     
         ax.plot(recall, precision,
                  label='PR-curve of {}'.format(class_name)+ '( area = {0:0.3f})'
-                ''.format(output[class_name]['pr_auc']),
+                ''.format(output[f"AUPRC_#{class_name}"]),
                  color=colors[(i+preds.shape[1])%len(colors)], linewidth=lw)
 
         ax.plot([0, 1], [rp, rp], 'k--', color=colors[(i+preds.shape[1])%len(colors)], lw=lw, label='random')
