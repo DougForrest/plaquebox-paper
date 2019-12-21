@@ -1,6 +1,6 @@
 import os 
 
-experiment_name = 'no-negative'
+experiment_name = 'resnet'
 
 data_dir = os.path.join('/mnt', 'disks', 'disk-1', 'data')
 
@@ -16,7 +16,7 @@ csv_path = {
 }
 
 img_path = os.path.join(data_dir,
-                        'tiles')
+                        'tiles', 'tiles')
 
 img_path_test = os.path.join(data_dir,
                         'tiles', 'tiles')
