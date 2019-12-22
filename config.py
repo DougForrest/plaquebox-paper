@@ -1,6 +1,6 @@
 import os 
 
-experiment_name = 'resnet'
+experiment_name = 'resnet50'
 
 data_dir = os.path.join('/mnt', 'disks', 'disk-1', 'data')
 
