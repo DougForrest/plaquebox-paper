@@ -1,6 +1,22 @@
 import datetime
 import os
+import json
 
+
+def load_json(filepath):
+
+    with open(filepath) as f:
+        data = json.load(f)
+
+    return(data)
+
+
+def save_json(data, filepath, indent=2):
+
+    with open(filepath, 'w') as f:
+        json.dump(data, f, indent=indent)
+        
+        
 def walk_dir(parent_dir):
 
     results = []
