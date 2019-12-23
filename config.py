@@ -1,4 +1,6 @@
+from datetime import datetime
 import os 
+
 
 experiment_name = 'resnet50'
 
@@ -24,7 +26,7 @@ img_path_test = os.path.join(data_dir,
 image_classes = ['cored', 'diffuse', 'CAA']
 
 
-
+run_date = datetime.now().strftime('%Y_%m_%d')
 
 if not os.path.exists(output_path):
     os.makedirs(output_path)
