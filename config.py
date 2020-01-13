@@ -2,14 +2,6 @@ from datetime import datetime
 import os
 from fastai.vision import models
 
-if os.environ.get('USER', None) == 'jupyter':
-    input_path = os.path.join('/mnt', 'disks', 'disk-1', 'data')
-    output_path = "gs://plaquebox-paper/experiments"
-    csv_dir = os.path.join('data', 'CSVs')
-else:
-    input_path = os.path.join('data')
-    output_path = input_path
-    csv_dir = os.path.join(input_path, 'CSVs')
 
 experiment_name = 'original_w_negative'
 experiment_description = """Using the original dataset including
@@ -25,6 +17,20 @@ v1_epochs = 10
 v2_epochs= 20
 
 run_date = datetime.now().strftime('%Y_%m_%d')
+
+if os.environ.get('USER', None) == 'jupyter':
+    input_path = os.path.join('/mnt', 'disks', 'disk-1', 'data', 'tiles')
+    output_path = os.path.join('/mnt', 'disks', 'disk-1', 'data')
+    csv_dir = os.path.join('data', 'CSVs')
+    gs_bucket = "gs://plaquebox-paper/experiment"
+    gs_results_dir = f"gs://plaquebox-paper/experiment/{experiment_name}/results"
+    gs_data_dir = f"gs://plaquebox-paper/experiment/{experiment_name}/data"
+    gs_model_dir = f"gs://plaquebox-paper/experiment/{experiment_name}/model"
+    
+else:
+    input_path = os.path.join('data')
+    output_path = input_path
+    csv_dir = os.path.join(input_path, 'CSVs')
 
 results_dir = os.path.join(os.path.join(output_path,
                                         experiment_name,
