@@ -1,38 +1,56 @@
 from datetime import datetime
-import os 
+import os
+import sys
+from fastai.vision import models
 
+if 'GCP' in os.environ:
+    input_path = os.path.join('/mnt', 'disks', 'disk-1', 'data')
+    output_path = "gs://plaquebox-paper/experiments"
+    csv_dir = os.path.join(input_path, 'CSVs')
+else:
+    input_path = os.path.join('data')
+    output_path = input_path
+    csv_dir = os.path.join(input_path, 'CSVs')
 
-experiment_name = 'resnet50'
+experiment_name = 'original'
+experiment_description = """Using the original dataset including
+                            the null observations"""
 
-data_dir = os.path.join('/mnt', 'disks', 'disk-1', 'data')
-
-output_path = os.path.join(data_dir,
-                           experiment_name)
-
-csv_dir = os.path.join('data', 'CSVs')
-models_dir = os.path.join(output_path, 'models')
-csv_path = {
-    'train': os.path.join(csv_dir, 'tiles_train.csv'),
-    'validation': os.path.join(csv_dir, 'tiles_validation.csv'),
-    'test': os.path.join(csv_dir, 'tiles_test.csv'),
-}
-
-img_path = os.path.join(data_dir,
-                        'tiles', 'tiles')
-
-img_path_test = os.path.join(data_dir,
-                        'tiles', 'tiles')
-
-image_classes = ['cored', 'diffuse', 'CAA']
-
+batch_size = 256
+model_name = 'resnet18'
+image_size = 256
+model = models.resnet18
+databunch_train_validation = 'databunch_train_validation.pkl'
+databunch_test = 'databunch_test.pkl'
+v1_epochs = 10
+v2_epochs= 20
 
 run_date = datetime.now().strftime('%Y_%m_%d')
 
-if not os.path.exists(output_path):
-    os.makedirs(output_path)
-    print("Config.py creating local data directory {}".format(output_path))
-else:
-    print("Config.py using existing local data directory {}".format(output_path))
+results_path = os.path.join(os.path.join(output_path,
+                            experiment_name,
+                            'results'))
 
-if not os.path.exists(models_dir):
-    os.makedirs(models_dir)
+data_path = os.path.join(os.path.join(output_path,
+                                      experiment_name,
+                                      'data'))
+
+model_path = os.path.join(os.path.join(output_path,
+                                       experiment_name,
+                                       'model'))
+
+for dir_name in [results_path, data_path, model_path]:
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+
+train = os.path.join(csv_dir, 'train_multilabel.csv')
+validation = os.path.join(csv_dir, 'validation_multilabel.csv')
+test = os.path.join(csv_dir, 'test_multilabel.csv')
+
+img_path = os.path.join(input_path,
+                        'tiles')
+
+img_path_test = os.path.join(input_path,
+                             'tiles')
+
+image_classes = ['cored', 'diffuse', 'CAA']
