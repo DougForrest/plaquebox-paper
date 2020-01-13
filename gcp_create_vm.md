@@ -74,13 +74,18 @@ gcloud compute instances create $INSTANCE_NAME \
 		--metadata-from-file startup-script=/Users/doug/code/alzheimer/plaquebox-paper/scripts/startup.sh
 
 
+--machine-type=custom-32-65536
 # NN training machine
 export PROJECT_ID="plaquebox-paper"
 export SERVICE_ACCT_NAME="storage"
 export INSTANCE_NAME="plaquebox-paper-nn-fastai"
-export INSTANCE_TYPE="n1-highmem-8"
-# export INSTANCE_TYPE="n1-standard-2"
+# export INSTANCE_TYPE="n1-highmem-8"
+# export INSTANCE_TYPE="custom-12-53248"
+# export INSTANCE_TYPE="n1-highmem-2"
+export INSTANCE_TYPE="n1-standard-2"
+# export INSTANCE_TYPE="n1-standard-32"
 export IMAGE_FAMILY="pytorch-latest-gpu"
+# export IMAGE_FAMILY="pytorch-latest-cpu"
 # export IMAGE_FAMILY='pytorch-0-4-cu92'
 export ZONE="us-west1-b"
 # Launch existing disk
@@ -91,17 +96,19 @@ gcloud compute instances create $INSTANCE_NAME \
         --image-project=deeplearning-platform-release \
         --maintenance-policy=TERMINATE \
         --machine-type=$INSTANCE_TYPE \
-        --boot-disk-size=300GB \
+        --boot-disk-size=200GB \
 		--disk=name=disk-1,device-name=disk-1,mode=rw,boot=no \
-        --metadata="install-nvidia-driver=True" \
-        --metadata-from-file startup-script=./scripts/startup.sh \
-        --accelerator="type=nvidia-tesla-t4,count=1" \
-        # --preemptible
-
-
-
+        --preemptible \
         --service-account=$SERVICE_ACCT_NAME@$PROJECT_ID.iam.gserviceaccount.com \
-        --scopes=https://www.googleapis.com/auth/cloud-platform \
+        --scopes=https://www.googleapis.com/auth/cloud-platform
+
+
+        --metadata-from-file startup-script=./scripts/startup.sh \
+        --metadata="install-nvidia-driver=True" \
+--accelerator="type=nvidia-tesla-t4,count=1" \
+--accelerator="type=nvidia-tesla-v100,count=1" \
+
+
 ```
 
 # Connect to serial port (Optional)
@@ -120,10 +127,10 @@ gcloud compute ssh --zone=$ZONE --project=$PROJECT_ID $INSTANCE_NAME
 ```
 
 ```bash
-# Fix folder permissions (TODO(ME) why are permissions broken?)
+# Fix folder permissions (TODO(ME)) why are permissions broken?)
 sudo chmod -R ugo+rw ~
 sudo chmod -R ugo+rw /mnt/disks/disk-1/
-
+```
 
 # Stop Instance
 ```bash
