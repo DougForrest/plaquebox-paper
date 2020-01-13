@@ -1,7 +1,38 @@
 import datetime
+import numpy as np
 import os
 import json
 
+
+def calc_metric_score(y=None, preds=None, metric=None, threshold=None):
+    if threshold:
+        preds = preds > threshold
+
+    return(metric(y, preds))
+
+
+def calc_threshold_metric_score(y=None,
+                                preds=None,
+                                classes=[],
+                                metrics=[],
+                                thresholds=np.arange(.05, 1, 0.05)):
+    output = {}
+    for threshold_i in thresholds:
+        for metric_i in metrics:
+            # Calc overall performance
+            key_name = f"{metric_i.__name__}_@{threshold_i:.2f}"
+            output[key_name] = calc_metric_score(y=y,
+                                                 preds=preds,
+                                                 metric=metric_i,
+                                                 threshold=threshold_i)
+
+            for class_idx in range(0, len(classes)):
+                key_name = f"{metric_i.__name__}_#{classes[class_idx]}_@{threshold_i:.2f}"
+                output[key_name] = calc_metric_score(y=y[:,class_idx],
+                                                          preds=preds[:,class_idx],
+                                                          metric=metric_i,
+                                                          threshold=threshold_i)
+    return(output)
 
 def load_json(filepath):
 
@@ -15,8 +46,8 @@ def save_json(data, filepath, indent=2):
 
     with open(filepath, 'w') as f:
         json.dump(data, f, indent=indent)
-        
-        
+
+
 def walk_dir(parent_dir):
 
     results = []
