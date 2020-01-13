@@ -1,18 +1,17 @@
 from datetime import datetime
 import os
-import sys
 from fastai.vision import models
 
 if os.environ.get('USER', None) == 'jupyter':
     input_path = os.path.join('/mnt', 'disks', 'disk-1', 'data')
     output_path = "gs://plaquebox-paper/experiments"
-    csv_dir = os.path.join(input_path, 'CSVs')
+    csv_dir = os.path.join('data', 'CSVs')
 else:
     input_path = os.path.join('data')
     output_path = input_path
     csv_dir = os.path.join(input_path, 'CSVs')
 
-experiment_name = 'original'
+experiment_name = 'original_w_negative'
 experiment_description = """Using the original dataset including
                             the null observations"""
 
@@ -27,19 +26,19 @@ v2_epochs= 20
 
 run_date = datetime.now().strftime('%Y_%m_%d')
 
-results_path = os.path.join(os.path.join(output_path,
-                            experiment_name,
-                            'results'))
+results_dir = os.path.join(os.path.join(output_path,
+                                        experiment_name,
+                                        'results'))
 
-data_path = os.path.join(os.path.join(output_path,
+data_dir = os.path.join(os.path.join(output_path,
+                                     experiment_name,
+                                     'data'))
+
+model_dir = os.path.join(os.path.join(output_path,
                                       experiment_name,
-                                      'data'))
+                                      'model'))
 
-model_path = os.path.join(os.path.join(output_path,
-                                       experiment_name,
-                                       'model'))
-
-for dir_name in [results_path, data_path, model_path]:
+for dir_name in [results_dir, data_dir, model_dir]:
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
