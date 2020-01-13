@@ -3,7 +3,7 @@ import os
 import sys
 from fastai.vision import models
 
-if 'GCP' in os.environ:
+if os.environ.get('USER', None) == 'jupyter':
     input_path = os.path.join('/mnt', 'disks', 'disk-1', 'data')
     output_path = "gs://plaquebox-paper/experiments"
     csv_dir = os.path.join(input_path, 'CSVs')
