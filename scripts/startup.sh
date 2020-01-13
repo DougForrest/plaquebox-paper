@@ -9,7 +9,6 @@ pip install pyvips
 cd ~
 git clone https://github.com/DougForrest/plaquebox-paper.git /home/jupyter/plaquebox-paper/
 cd /home/jupyter/plaquebox-paper/
-git checkout gcp
 
 export MOUNT_DIR=disk-1
 export DEVICE_ID=sdb
